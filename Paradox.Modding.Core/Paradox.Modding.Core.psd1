@@ -43,7 +43,10 @@ Description = 'Core toolkit for modding Paradox games'
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @(
+	@{ ModuleName = 'PSFramework'; ModuleVersion = '1.12.346' }
+	@{ ModuleName = 'string'; ModuleVersion = '1.1.5' }
+)
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()
@@ -62,7 +65,13 @@ Description = 'Core toolkit for modding Paradox games'
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
 FunctionsToExport = @(
+	'Add-PdxLocalizedString'
 	'Build-PdxMod'
+	'ConvertTo-PdxConfigFormat'
+	'Export-PdxLocalizedString'
+	'Get-PdxBuildExtension'
+	'New-PdxLocalizedString'
+	'Register-PdxBuildExtension'
 )
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
@@ -92,10 +101,10 @@ PrivateData = @{
         Tags = @('modding', 'paradox', 'gaming')
 
         # A URL to the license for this module.
-        # LicenseUri = ''
+        LicenseUri = 'https://github.com/FriedrichWeinmann/Paradox.Modding.Core/blob/master/LICENSE'
 
         # A URL to the main website for this project.
-        # ProjectUri = ''
+        ProjectUri = 'https://github.com/FriedrichWeinmann/Paradox.Modding.Core'
 
         # A URL to an icon representing this module.
         # IconUri = ''
