@@ -54,6 +54,7 @@
 		- See description on "-Rule" parameter to see how rules should be defined.
 		- See "Read-PdxFileSection" command for how to obtain sections.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, ValueFromPipeline = $true)]

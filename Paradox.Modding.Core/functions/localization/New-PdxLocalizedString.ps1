@@ -20,6 +20,7 @@
 		Generates a hashtable, mapping all the supported languages.
 		There really is nothing else to it.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
 	[OutputType([hashtable])]
 	[CmdletBinding()]
 	param ()

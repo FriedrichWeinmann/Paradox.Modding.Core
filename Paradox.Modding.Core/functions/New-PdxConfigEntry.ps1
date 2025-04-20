@@ -119,7 +119,7 @@
 		https://github.com/FriedrichWeinmann/Paradox.Modding.Stellaris/blob/master/Paradox.Modding.Stellaris/functions/ConvertTo-PdsBuilding.ps1
 	#>
 	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSUseShouldProcessForStateChangingFunctions", "")]
-	[OutputType([System.Collections.Specialized.OrderedDictionary])]
+	[OutputType([System.Collections.IDictionary])]
 	[CmdletBinding(DefaultParameterSetName = 'Default')]
 	param (
 		[Parameter(Mandatory = $true)]

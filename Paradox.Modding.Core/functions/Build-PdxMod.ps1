@@ -108,7 +108,7 @@
 				Author  = 'unspecified'
 				Version = 'unspecified'
 			}
-			$configPath = Join-Path -Path $rootPath -ChildPath 'config.psd1' 
+			$configPath = Join-Path -Path $rootPath -ChildPath 'config.psd1'
 			if (Test-Path -Path $configPath) {
 				$config = Import-PSFPowerShellDataFile -Path $configPath
 				foreach ($entry in $config.GetEnumerator()) {
