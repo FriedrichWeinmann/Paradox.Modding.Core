@@ -37,6 +37,13 @@
 		The destination folder where to place the built mod.
 		Use this if you do not want to deploy the mods straight to your game.
 
+	.PARAMETER BadExtensions
+		File extensions that should not remain in your mod structure.
+		Before finalizing and deploying the mod, all files with one of the included extensions will be deleted from the staging copy of your mods.
+		Defaults to: .ps1, .psd1
+
+		Note: This will NOT affect the files in your source structure, only in the copy used to wrap up and deploy your mod.
+
 	.PARAMETER EnableException
 		This parameters disables user-friendly warnings and enables the throwing of exceptions.
 		This is less user friendly, but allows catching exceptions in calling scripts.
@@ -68,6 +75,9 @@
 		[string]
 		$OutPath,
 
+		[string[]]
+		$BadExtensions = @('.ps1','.psd1'),
+
 		[switch]
 		$EnableException
 	)
@@ -85,7 +95,11 @@
 
 				[AllowEmptyCollection()]
 				[string[]]
-				$Tags
+				$Tags,
+
+				[AllowEmptyCollection()]
+				[string[]]
+				$BadExtensions
 			)
 
 			# Prepare Configuration
@@ -120,7 +134,7 @@
 			}
 
 			# Remove all PowerShell-native content from staging folder
-			Get-ChildItem -Path $rootPath -Recurse | Where-Object Extension -In '.ps1', '.psd1' | Remove-Item
+			Get-ChildItem -Path $rootPath -Recurse | Where-Object Extension -In $BadExtensions | Remove-Item
 		}
 
 		function Deploy-ModInstance {
@@ -153,7 +167,7 @@
 				'HOI4' { $OutPath = "$([System.Environment]::GetFolderPath("MyDocuments"))\Paradox Interactive\Hearts of Iron IV\mod" }
 				'Imperator' { $OutPath = "$([System.Environment]::GetFolderPath("MyDocuments"))\Paradox Interactive\Imperator\mod" }
 				'Stellaris' { $OutPath = "$([System.Environment]::GetFolderPath("MyDocuments"))\Paradox Interactive\Stellaris\mod" }
-				default { Stop-PSFFunction -Message "Game $Game not implemented yet!" -Cmdlet $PSCmdlet -EnableException $true }
+				default { Stop-PSFFunction -Message "Game $Game not implemented yet! Use '-OutPath' instead to manually pick the deployment path!" -Cmdlet $PSCmdlet -EnableException $true }
 			}
 		}
 
@@ -163,6 +177,7 @@
 		Write-PSFMessage -Level Host -Message "Building Mods in '$Path' to '$OutPath'"
 		foreach ($modRoot in Get-ChildItem -Path $Path -Directory) {
 			if ($modRoot.Name -notlike $Name) { continue }
+			if ($modRoot.Name -eq '.vscode') { continue }
 
 			try {
 				Write-PSFMessage -Level Host -Message "  Processing: {0}" -StringValues $modRoot.Name -Target $modRoot.Name
@@ -170,7 +185,7 @@
 				Copy-Item -LiteralPath $modRoot.FullName -Destination $tempDirectory -Recurse
 				
 				Write-PSFMessage -Level Host -Message "    Building Mod. Tags: {0}" -StringValues ($Tags -join ',') -Target $modRoot.Name
-				Build-ModInstance -Path $tempDirectory -Name $modRoot.Name -Tags $Tags
+				Build-ModInstance -Path $tempDirectory -Name $modRoot.Name -Tags $Tags -BadExtensions $BadExtensions
 				
 				Write-PSFMessage -Level Host -Message "    Deploying Mod" -Target $modRoot.Name
 				Deploy-ModInstance -Path $tempDirectory -Name $modRoot.Name -Destination $OutPath
